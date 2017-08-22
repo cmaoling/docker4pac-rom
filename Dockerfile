@@ -18,12 +18,17 @@ RUN dpkg -l | grep ^rc | awk '{print($2)}' | xargs sudo apt-get -y purge
 RUN apt-get -y update
 RUN apt-get -y install openjdk-7-jdk
 RUN java -version
-RUN apt-get -y install bison build-essential bzip2 curl dpkg-dev flex g++-multilib git git-review gnupg gperf lib32ncurses5-dev lib32readline-gplv2-dev lib32z1-dev libbz2-1.0 libbz2-dev libc6-dev libghc-bzlib-dev libgl1-mesa-dev libgl1-mesa-glx:i386 libncurses5-dev libreadline6-dev libreadline6-dev:i386 libx11-dev:i386 libxml2-utils lzop pngcrush pngquant python-markdown schedtool squashfs-tools tofrodos x11proto-core-dev xsltproc zip zlib1g-dev zlib1g-dev:i386
-RUN ln -s /usr/lib/i386-linux-gnu/mesa/libGL.so.1 /usr/lib/i386-linux-gnu/libGL.so
+RUN apt-get -y install bison build-essential bzip2 curl dpkg-dev flex g++-multilib git git-review gnupg gperf lib32ncurses5-dev lib32readline-gplv2-dev lib32z1-dev libbz2-1.0 libbz2-dev libc6-dev libghc-bzlib-dev libgl1-mesa-dev libncurses5-dev libreadline6-dev libxml2-utils lzop pngcrush pngquant python-markdown schedtool squashfs-tools tofrodos x11proto-core-dev xsltproc zip zlib1g-dev
+#RUN apt-get -y install libgl1-mesa-glx:i386 libreadline6-dev:i386 libx11-dev:i386 zlib1g-dev:i386
+#RUN ln -s /usr/lib/i386-linux-gnu/mesa/libGL.so.1 /usr/lib/i386-linux-gnu/libGL.so
 RUN mkdir ~/bin && curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > ~/bin/repo && chmod a+x ~/bin/repo
-RUN echo "export PATH=~/bin:$PATH" > ~/.bashrc
-RUN cat  ~/.bashrc
-RUN source  ~/.bashrc
-RUN mkdir ~/pac-rom && cd ~/pac-rom
+RUN PATH="~/bin:$PATH"
+RUN apt-get -y install phablet-tools
+RUN mkdir ~/pac-rom
+WORkDIR ~/pac-rom
+ENV USER_EMAIL "you@example.com"
+ENV USER_NAME "Your Name"
+RUN git config --global user.email $USER_EMAIL
+RUN git config --global user.name $USER_NAME
 RUN repo init -u https://github.com/PAC-ROM/pac-rom.git -b pac-5.1 -g all,-notdefault,-darwin
 RUN repo sync -j4
